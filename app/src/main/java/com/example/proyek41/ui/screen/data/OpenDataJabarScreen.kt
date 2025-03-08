@@ -15,6 +15,7 @@ fun OpenDataJabarScreen() {
     val openDataList = remember { mutableStateOf<List<String>>(emptyList()) }
 
     LaunchedEffect(Unit) {
+
         coroutineScope.launch {
             // TODO: Panggil API Open Data Jabar di sini
             val fetchedData = listOf("Data 1", "Data 2", "Data 3") // Dummy Data

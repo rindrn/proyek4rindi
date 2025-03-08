@@ -15,6 +15,14 @@ import androidx.navigation.NavHostController
 import com.example.proyek41.ui.viewmodel.DataViewModel
 import com.example.proyek41.data.local.entity.DataEntity
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.ui.Alignment
+
+
+
 
 @Composable
 fun DataScreen(
@@ -34,29 +42,51 @@ fun DataScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(dataList.orEmpty()) { data: DataEntity ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .clickable { /* Navigasi ke Detail */ },
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = data.namaKabupatenKota ?: "Nama Tidak Tersedia", fontSize = 20.sp)
-                        Text(text = "Provinsi: ${data.namaProvinsi ?: "Tidak Ada"}", fontSize = 14.sp)
+    }
 
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                            TextButton(onClick = { /* Edit Data */ }) {
-                                Text("Edit")
-                            }
-                            TextButton(onClick = {
-                                itemToDelete.value = data
-                                showDialog.value = true
-                            }) {
-                                Text("Hapus")
-                            }
+    if (dataList.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center // Gunakan Alignment.Center di Box
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
+
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(dataList.orEmpty()) { data: DataEntity ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .clickable { navController.navigate("detail/${data.id}") },
+                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = data.namaKabupatenKota ?: "Nama Tidak Tersedia",
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Text(
+                        text = "Provinsi: ${data.namaProvinsi ?: "Tidak Ada"}",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(onClick = { navController.navigate("edit/${data.id}") }) {
+                            Icon(Icons.Default.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
+                        }
+                        IconButton(onClick = {
+                            itemToDelete.value = data
+                            showDialog.value = true
+                        }) {
+                            Icon(Icons.Default.Delete, contentDescription = "Hapus", tint = MaterialTheme.colorScheme.error)
                         }
                     }
                 }
@@ -65,7 +95,7 @@ fun DataScreen(
     }
 
     // Dialog Konfirmasi Hapus
-    if (showDialog.value) {
+    if (showDialog.value && itemToDelete.value != null) {
         AlertDialog(
             onDismissRequest = { showDialog.value = false },
             title = { Text("Konfirmasi Hapus") },
@@ -73,23 +103,19 @@ fun DataScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        itemToDelete.value?.id?.let { id ->
-                            coroutineScope.launch {
-                                viewModel.deleteData(id)
-                                showDialog.value = false
-                            }
+                        coroutineScope.launch {
+                            itemToDelete.value?.let { viewModel.deleteData(it.id) } // Ubah it menjadi it.id
                         }
-                    }
+                        showDialog.value = false
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
                     Text("Hapus")
                 }
-            },
+            }
+            ,
             dismissButton = {
-                Button(
-                    onClick = { showDialog.value = false }
-                ) {
-                    Text("Batal")
-                }
+                Button(onClick = { showDialog.value = false }) { Text("Batal") }
             }
         )
     }
