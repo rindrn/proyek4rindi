@@ -1,5 +1,6 @@
 package com.example.proyek41.ui.screen.data
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,12 +22,14 @@ import com.example.proyek41.ui.viewmodel.DataViewModel
 import com.example.proyek41.ui.components.TabRowExample
 
 @Composable
-fun DataListScreen(navController: NavHostController, viewModel: DataViewModel) {
+fun DataListScreen(
+    navController: NavHostController,
+    viewModel: DataViewModel,
+    showDialog: MutableState<Boolean>,
+    itemToDelete: MutableState<DataEntity?>
+) {
     val dataList by viewModel.dataList.observeAsState(emptyList())
-    val showDialog = remember { mutableStateOf(false) }
-    val itemToDelete = remember { mutableStateOf<DataEntity?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize()) { // Pastikan Column mencakup semuanya
         // Tambahkan TabLayout di sini
@@ -114,6 +117,7 @@ fun DataListScreen(navController: NavHostController, viewModel: DataViewModel) {
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Button(
                                             onClick = {
+                                                Log.d("DataListScreen", "Tombol hapus ditekan untuk id: ${item.id}")
                                                 itemToDelete.value = item
                                                 showDialog.value = true
                                             },

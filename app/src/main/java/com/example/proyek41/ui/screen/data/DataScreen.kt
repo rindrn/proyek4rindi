@@ -11,18 +11,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proyek41.ui.viewmodel.DataViewModel
 import com.example.proyek41.data.local.entity.DataEntity
 import kotlinx.coroutines.launch
 
 @Composable
 fun DataScreen(
-    navController: NavController,
+    navController: NavHostController,
     viewModel: DataViewModel
 ) {
-    val dataList by viewModel.dataList.observeAsState(initial = emptyList()) // ✅ Pakai collectAsState jika pakai StateFlow
-    // val dataList by viewModel.dataList.observeAsState(emptyList()) // ✅ Jika pakai LiveData
+    val dataList by viewModel.dataList.observeAsState(initial = emptyList())
     val coroutineScope = rememberCoroutineScope()
+
+    // State untuk dialog konfirmasi hapus
+    val showDialog = remember { mutableStateOf(false) }
+    val itemToDelete = remember { mutableStateOf<DataEntity?>(null) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(text = "Data dari Open Data Jabar", fontSize = 24.sp, modifier = Modifier.padding(bottom = 8.dp))
@@ -31,7 +35,7 @@ fun DataScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(dataList.orEmpty()) { data: DataEntity -> // ✅ Menghindari null dengan orEmpty()
+            items(dataList.orEmpty()) { data: DataEntity ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -48,11 +52,8 @@ fun DataScreen(
                                 Text("Edit")
                             }
                             TextButton(onClick = {
-                                data.id?.let { id ->
-                                    coroutineScope.launch {
-                                        viewModel.deleteData(id) // ✅ Panggil fungsi dari ViewModel
-                                    }
-                                }
+                                itemToDelete.value = data
+                                showDialog.value = true
                             }) {
                                 Text("Hapus")
                             }
@@ -61,5 +62,35 @@ fun DataScreen(
                 }
             }
         }
+    }
+
+    // Dialog Konfirmasi Hapus
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = { Text("Konfirmasi Hapus") },
+            text = { Text("Apakah Anda yakin ingin menghapus data ini?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        itemToDelete.value?.id?.let { id ->
+                            coroutineScope.launch {
+                                viewModel.deleteData(id)
+                                showDialog.value = false
+                            }
+                        }
+                    }
+                ) {
+                    Text("Hapus")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showDialog.value = false }
+                ) {
+                    Text("Batal")
+                }
+            }
+        )
     }
 }

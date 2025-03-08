@@ -21,6 +21,10 @@ import com.example.proyek41.ui.viewmodel.DataViewModel
 import com.example.proyek41.ui.screen.profile.ProfileScreen
 import com.example.proyek41.ui.screen.detail.DetailScreen
 import com.example.proyek41.ui.screen.home.HomeScreen
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import com.example.proyek41.data.local.entity.DataEntity  // Pastikan ini benar sesuai lokasi DataEntity
+
 
 //import com.example.proyek41.ui.DataEntryScreen
 //import com.example.proyek41.ui.EditScreen
@@ -28,6 +32,10 @@ import com.example.proyek41.ui.screen.home.HomeScreen
 @Composable
 fun AppNavHost(viewModel: DataViewModel) {
     val navController = rememberNavController()
+
+    // Tambahkan MutableState untuk showDialog dan itemToDelete
+    val showDialog = remember { mutableStateOf(false) }
+    val itemToDelete = remember { mutableStateOf<DataEntity?>(null) }
 
     Scaffold(
         bottomBar = {
@@ -53,13 +61,18 @@ fun AppNavHost(viewModel: DataViewModel) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("dataTab") {
-                DataTabScreen (navController = navController, viewModel = viewModel) }
-
+                DataTabScreen(navController = navController, viewModel = viewModel)
+            }
             composable(Screen.Home.route) {
-                HomeScreen (navController = navController )
+                HomeScreen(navController = navController)
             }
             composable(Screen.Data.route) {
-                DataListScreen(navController = navController, viewModel = viewModel)
+                DataListScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    showDialog = showDialog,   // Perbaikan: Menyediakan MutableState<Boolean>
+                    itemToDelete = itemToDelete // Perbaikan: Menyediakan MutableState<DataEntity?>
+                )
             }
             composable(Screen.Profile.route) {
                 ProfileScreen()
