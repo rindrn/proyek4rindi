@@ -7,11 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.proyek41.data.AppDatabase
 import com.example.proyek41.data.local.entity.DataEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import com.example.proyek41.data.local.dao.DataDao
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DataViewModel(application: Application) : AndroidViewModel(application) {
     private val dao = AppDatabase.getDatabase(application).dataDao()
@@ -19,7 +18,6 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _selectedData = MutableStateFlow<DataEntity?>(null)
     val selectedData = _selectedData.asStateFlow()
-
 
     fun insertData(
         kodeProvinsi: String,
@@ -50,21 +48,21 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
     fun updateData(data: DataEntity) {
         viewModelScope.launch {
             dao.update(data)
-            println("Database updated!") // Log
-            val allData = dao.getAll()
-            println("All Data after update: $allData") // Log tambahan
+            println("Database updated!") // Log tambahan
         }
     }
 
-
-    fun deleteData(data: DataEntity) {
+    fun deleteData(id: Long) {
         viewModelScope.launch {
-            dao.delete(data)
+            val data = dao.getById(id)
+            if (data != null) {
+                dao.delete(data)
+                println("Deleted data: $data") // Log tambahan
+            }
         }
     }
 
     suspend fun getDataById(id: Long): DataEntity? {
-        println("Fetching data with ID: $id")
         return withContext(Dispatchers.IO) {
             dao.getById(id)
         }
@@ -73,7 +71,6 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
     fun loadSelectedData(id: Long) {
         viewModelScope.launch {
             val data = dao.getById(id)
-            println("Loaded data for ID: $id -> $data") // Log tambahan
             _selectedData.value = data
         }
     }

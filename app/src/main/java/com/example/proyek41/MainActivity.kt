@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
                 val dataViewModel: DataViewModel = viewModel()
 
                 // Menampilkan Navigation Host
-                AppNavHost(viewModel = dataViewModel) // Tidak perlu navController di sini
+                AppNavHost(viewModel = dataViewModel)
             }
         }
     }

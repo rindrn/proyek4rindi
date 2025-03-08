@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyek41.di.Injection
-import com.example.proyek41.ui.theme.ViewModelFactory
+import com.example.proyek41.ui.viewmodel.ViewModelFactory
 import com.example.proyek41.ui.common.UiState
 import com.example.proyek41.ui.components.CartItem
 import com.example.proyek41.ui.components.OrderButton

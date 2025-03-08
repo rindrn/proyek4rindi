@@ -15,6 +15,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.proyek41.ui.navigation.Screen
 import com.example.proyek41.ui.components.BottomNavigationBar
+import com.example.proyek41.ui.screen.data.DataListScreen
+import com.example.proyek41.ui.screen.data.DataTabScreen
 import com.example.proyek41.ui.viewmodel.DataViewModel
 import com.example.proyek41.ui.screen.profile.ProfileScreen
 import com.example.proyek41.ui.screen.detail.DetailScreen
@@ -50,6 +52,9 @@ fun AppNavHost(viewModel: DataViewModel) {
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable("dataTab") {
+                DataTabScreen (navController = navController, viewModel = viewModel) }
+
             composable(Screen.Home.route) {
                 HomeScreen (navController = navController )
             }

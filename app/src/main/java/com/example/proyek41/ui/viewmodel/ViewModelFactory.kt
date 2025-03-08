@@ -1,4 +1,4 @@
-package com.example.proyek41.ui.theme
+package com.example.proyek41.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
