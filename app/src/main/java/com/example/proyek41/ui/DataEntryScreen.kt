@@ -4,15 +4,12 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -36,81 +33,45 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
                 text = "Input Data",
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
             )
-            OutlinedTextField(
-                value = kodeProvinsi,
-                onValueChange = { kodeProvinsi = it },
-                label = { Text("Kode Provinsi") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = namaProvinsi,
-                onValueChange = { namaProvinsi = it },
-                label = { Text("Nama Provinsi") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = kodeKabupatenKota,
-                onValueChange = { kodeKabupatenKota = it },
-                label = { Text("Kode Kabupaten/Kota") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = namaKabupatenKota,
-                onValueChange = { namaKabupatenKota = it },
-                label = { Text("Nama Kabupaten/Kota") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = total,
-                onValueChange = { total = it },
-                label = { Text("Total") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = satuan,
-                onValueChange = { satuan = it },
-                label = { Text("Satuan") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = tahun,
-                onValueChange = { tahun = it },
-                label = { Text("Tahun") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
+            CustomTextField(value = kodeProvinsi, label = "Kode Provinsi") { kodeProvinsi = it }
+            CustomTextField(value = namaProvinsi, label = "Nama Provinsi") { namaProvinsi = it }
+            CustomTextField(value = kodeKabupatenKota, label = "Kode Kabupaten/Kota") { kodeKabupatenKota = it }
+            CustomTextField(value = namaKabupatenKota, label = "Nama Kabupaten/Kota") { namaKabupatenKota = it }
+            CustomTextField(value = total, label = "Total", keyboardType = KeyboardType.Number) { total = it }
+            CustomTextField(value = satuan, label = "Satuan") { satuan = it }
+            CustomTextField(value = tahun, label = "Tahun", keyboardType = KeyboardType.Number) { tahun = it }
+
             Button(
                 onClick = {
-                    // Memanggil fungsi insertData pada ViewModel
-                    viewModel.insertData(
-                        kodeProvinsi = kodeProvinsi,
-                        namaProvinsi = namaProvinsi,
-                        kodeKabupatenKota = kodeKabupatenKota,
-                        namaKabupatenKota = namaKabupatenKota,
-                        total = total,
-                        satuan = satuan,
-                        tahun = tahun
-                    )
+                    viewModel.insertData(kodeProvinsi, namaProvinsi, kodeKabupatenKota, namaKabupatenKota, total, satuan, tahun)
                     Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
-
-                    // Jika ingin kembali ke halaman sebelumnya setelah submit
                     navController.popBackStack()
-
-                    // Navigasi ke tampilan daftar data
                     navController.navigate("home")
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("Submit Data")
+                Text("Submit Data", color = Color.White)
             }
         }
     }
+}
+
+@Composable
+fun CustomTextField(value: String, label: String, keyboardType: KeyboardType = KeyboardType.Text, onValueChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        modifier = Modifier.fillMaxWidth()
+    )
 }

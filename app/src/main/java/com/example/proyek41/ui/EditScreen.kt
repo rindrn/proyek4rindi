@@ -16,7 +16,10 @@ import androidx.navigation.NavHostController
 import com.example.proyek41.data.local.entity.DataEntity
 import com.example.proyek41.ui.viewmodel.DataViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditScreen(
     itemId: Long,
@@ -35,14 +38,12 @@ fun EditScreen(
     var tahun by remember { mutableStateOf("") }
 
     LaunchedEffect(dataId) {
-        println("EditScreen received dataId: $dataId")
         viewModel.loadSelectedData(dataId)
     }
 
     val selectedData by viewModel.selectedData.collectAsStateWithLifecycle()
 
     LaunchedEffect(selectedData) {
-        println("selectedData: $selectedData") // Tambahkan ini
         selectedData?.let { data ->
             kodeProvinsi = data.kodeProvinsi
             namaProvinsi = data.namaProvinsi
@@ -54,22 +55,26 @@ fun EditScreen(
         }
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Edit Data") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
+                .padding(paddingValues)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "Edit Data",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
             OutlinedTextField(
                 value = kodeProvinsi,
                 onValueChange = { kodeProvinsi = it },
@@ -143,7 +148,9 @@ fun EditScreen(
                         Toast.makeText(context, "Data tidak ditemukan!", Toast.LENGTH_SHORT).show()
                     }
                 },
-                enabled = selectedData != null // Disable tombol jika data tidak ditemukan
+                modifier = Modifier.fillMaxWidth(),
+                enabled = selectedData != null,
+                shape = MaterialTheme.shapes.medium
             ) {
                 Text(text = "Update Data")
             }
