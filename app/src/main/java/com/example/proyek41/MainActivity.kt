@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyek41.ui.AppNavHost
 import com.example.proyek41.ui.theme.Proyek41Theme
-import com.example.proyek41.viewmodel.DataViewModel
+import com.example.proyek41.ui.viewmodel.DataViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,8 +15,9 @@ class MainActivity : ComponentActivity() {
             Proyek41Theme {
                 // Inisialisasi ViewModel
                 val dataViewModel: DataViewModel = viewModel()
+
                 // Menampilkan Navigation Host
-                AppNavHost(viewModel = dataViewModel)
+                AppNavHost(viewModel = dataViewModel) // Tidak perlu navController di sini
             }
         }
     }

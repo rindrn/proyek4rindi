@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Proyek4.1</string>
+    <string name="back">Back</string>
+    <string name="required_point">Required Points: %d</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="add_to_cart">Add to Cart (Total: %d points)</string>
+    <string name="share_message">You have ordered %1$d items with a total of %2$d points.</string>
+    <string name="menu_cart">Cart</string>
+    <string name="total_order">Total Order: %1$d points</string>
 </resources>

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Tema untuk Splash Screen -->
+    <style name="Theme.SplashScreen" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/rindi</item>
+    </style>
 
+    <!-- Tema utama aplikasi -->
     <style name="Theme.Proyek41" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

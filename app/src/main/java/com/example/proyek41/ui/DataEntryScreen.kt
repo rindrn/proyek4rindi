@@ -16,7 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.proyek41.viewmodel.DataViewModel
+import com.example.proyek41.ui.viewmodel.DataViewModel
 
 @Composable
 fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) {
@@ -100,8 +100,12 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
                         tahun = tahun
                     )
                     Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+
+                    // Jika ingin kembali ke halaman sebelumnya setelah submit
+                    navController.popBackStack()
+
                     // Navigasi ke tampilan daftar data
-                    navController.navigate("list")
+                    navController.navigate("home")
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

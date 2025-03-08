@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.livedata.observeAsState
-import com.example.proyek41.data.DataEntity
-import com.example.proyek41.viewmodel.DataViewModel
+import com.example.proyek41.data.local.entity.DataEntity
+import com.example.proyek41.ui.viewmodel.DataViewModel
 import kotlinx.coroutines.launch // Tambahkan import ini
 
 @Composable
@@ -136,7 +136,7 @@ fun DataListScreen(navController: NavHostController, viewModel: DataViewModel) {
                                 ) {
                                     Button(
                                         onClick = {
-                                            navController.navigate("edit/${item.id}")
+                                            navController.navigate("edit/${item.id}/0") // Default value untuk dataId
                                         },
                                         shape = RoundedCornerShape(8.dp)
                                     ) {

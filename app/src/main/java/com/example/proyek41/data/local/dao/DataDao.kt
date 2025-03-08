@@ -1,7 +1,8 @@
-package com.example.proyek41.data
+package com.example.proyek41.data.local.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.proyek41.data.local.entity.DataEntity
 
 @Dao
 interface DataDao {
@@ -16,7 +17,7 @@ interface DataDao {
     fun getAll(): LiveData<List<DataEntity>>
 
     @Query("SELECT * FROM data_table WHERE id = :dataId")
-    suspend fun getById(dataId: Int): DataEntity?
+    suspend fun getById(dataId: Long): DataEntity?
 
     @Delete
     suspend fun delete(data: DataEntity)
